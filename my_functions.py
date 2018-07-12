@@ -83,3 +83,46 @@ def leng_sentences(text):
 
     print("New Variables: sentence length list: {}, sentence index list: {}".format(len(s_leng), len(s_index)))
     return s_leng, s_index
+
+
+def polarity_sentences(text):
+    # import functions
+    from textblob import TextBlob
+
+    # split text into sentences
+    sentences = TextBlob(text).sentences
+
+    # create empty list
+    polarities = []
+
+    # function
+    for sentence in sentences:
+        sentences_analysis = TextBlob(str(sentence)).sentiment.polarity
+        polarities.append(sentences_analysis)
+        polar = TextBlob(str(sentence)).sentiment.polarity
+
+    print("Overall Polarity: {}, Polarities (first 10): {}".format(polar, polarities[:9]))
+    return polar, polarities
+
+
+def subjectivity_sentences(text):
+    # import functions
+    from textblob import TextBlob
+
+    # split text into sentences
+    sentences = TextBlob(text).sentences
+
+    # create list
+    subjectivities = []
+
+    # function
+    for sentence in sentences:
+        sentences_analysis = TextBlob(str(sentence)).sentiment.subjectivity
+        subjectivities.append(sentences_analysis)
+        subjectiveness = TextBlob(str(sentence)).sentiment.subjectivity
+
+    print("Overall Subjectiveness: {}, Subjectivities (first 10): {}".format(subjectiveness, subjectivities[:9]))
+    return subjectiveness, subjectivities
+
+
+
