@@ -125,4 +125,21 @@ def subjectivity_sentences(text):
     return subjectiveness, subjectivities
 
 
+def remove_chapter_numbers(text):
+    # import functions
+    from textblob import TextBlob
+
+    # split text into sentences
+    sentences = TextBlob(text).sentences
+
+    # list comprehension
+    full_sentences = [str(sentence) for sentence in sentences if len(sentence.split()) > 1]
+
+    print("Number of Sentences:", len(full_sentences))
+    return (full_sentences)
+
+
+
+
+
 
