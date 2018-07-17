@@ -55,6 +55,14 @@ def clean_text(lines):
     return "".join(approved_characters)
 
 
+def syntax_length(sentences_list):
+        sentence_word_count = []
+        for sentence in sentences_list:
+            count = len(sentence.split())
+            sentence_word_count.append(count)
+        return sentence_word_count
+
+    
 def leng_sentences(text):
     # import
     import re
@@ -105,6 +113,22 @@ def polarity_sentences(text):
     return polar, polarities
 
 
+def polarity_sentences_list(sentences_list):
+    
+    #import functions
+    from textblob import TextBlob
+
+    #create list
+    polarities = []
+
+    #function
+    for sentence in sentences_list:
+        sentences_analysis = TextBlob(str(sentence)).sentiment.polarity
+        polarities.append(sentences_analysis)
+
+    return polarities
+
+
 def subjectivity_sentences(text):
     # import functions
     from textblob import TextBlob
@@ -125,7 +149,24 @@ def subjectivity_sentences(text):
     return subjectiveness, subjectivities
 
 
-def remove_chapter_numbers(text):
+def subjectivity_sentences_list(sentences_list):
+    
+    #import functions
+    from textblob import TextBlob
+
+    #create list
+    subjectivities = []
+
+    #function
+    for sentence in sentences_list:
+        sentences_analysis = TextBlob(str(sentence)).sentiment.subjectivity
+        subjectivities.append(sentences_analysis)
+
+    return subjectivities
+
+
+def remove_sentences_less_than_2(text):
+    
     # import functions
     from textblob import TextBlob
 
@@ -139,7 +180,95 @@ def remove_chapter_numbers(text):
     return (full_sentences)
 
 
+def split_text(text, split_keyword):
+
+    # funtion
+    text_sections = text.split(split_keyword)
+
+    print("Number of Sections:", len(text_sections))
+    return text_sections
 
 
+def create_chapter_numbers(file , chapter_titles, text_reader_function=text_reader):
+    
+    """insert chapter number for each chapter title
+    
+    file: text file 
+    chapter_titles: a list of its chapter titles
+    
+    returns: dictionary with every chapter"""
+    
+    text = text_reader_function(file)
+    
+    for title in chapter_titles:
+        index = text.find(title)
+        new_text = text[:index] + "1. " + text[index:]
+        text = new_text
+    
+    return text
 
+
+def split_by_chapter_number(text):
+    
+    #import
+    from collections import defaultdict
+    from textblob import TextBlob
+    
+    # create empty list
+    chapter_dictionary = defaultdict(list)
+    chapter_number = 0
+
+        
+    # split text into sentences
+    sentences = TextBlob(text).sentences
+
+    # list comprehension
+    for sentence in sentences:
+        str(sentence)
+        word_list = sentence.split( )
+        if word_list:
+            first_word = word_list[0]
+            if first_word[-1] == '.':
+                try:
+                    float(first_word)
+                    chapter_number += 1
+                except:
+                    pass
+        chapter_dictionary[chapter_number].append(str(sentence))
+    return chapter_dictionary
+
+
+def remove_indexed_values(dictionary , int):
+    for item in dictionary.values():
+        del item[int]
+    return dictionary
+
+
+def create_chapter_data_frame(sentence_list , section, book_title, author):
+    
+    """sentence_list = list of sentences
+    section = int
+    book_title = title"""
+    
+    # import
+    import pandas as pd
+    
+    df = pd.DataFrame()
+    df["Sentence"] = sentence_list
+    df["Section"] = section
+    df["Book_Title"] = book_title
+    df["Author"] = author
+    return df
+
+
+def book_df(book_chapters_dict, book_title , author):    
+    
+    # import
+    import pandas as pd
+    
+    df = pd.DataFrame(columns = ["Sentence" , "Section", "Book_Title" , "Author"])
+    for chapter in book_chapters_dict.keys():
+        chapter_df = create_chapter_data_frame(book_chapters_dict[chapter], chapter, book_title , author)
+        df = df.append(chapter_df, ignore_index = True)
+    return df
 
