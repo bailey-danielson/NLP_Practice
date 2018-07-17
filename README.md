@@ -1,1 +1,1 @@
-# NLP_Practice
+NLP_Practice uses Natural Language Processing in Literary Analyses.
