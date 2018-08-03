@@ -38,6 +38,30 @@ def clean_and_remove_stops(lines):
     return " ".join(approved_words)
 
 
+def clean_sentences(lines):
+    """Remove numbers and punctuation, and standardize case
+
+    Keyword Arguments:
+    lines: string of text"""
+
+    # import
+    import re
+    from nltk.corpus import stopwords
+
+    # create set of stop words
+    stop = set(stopwords.words('english'))
+
+    lower_characters = lines.lower()
+    approved_words = []
+    white_list = set('abcdefghijklmnopqrstuvwxyz ')
+
+    for word in lower_characters.split():
+        if word not in stop:
+            clean_word = re.sub(r'[^a-z ]+', '', word)
+            approved_words.append(clean_word)
+    return approved_words
+
+
 def clean_text(lines):
     """Remove numbers and punctuation, and standardize case
 
